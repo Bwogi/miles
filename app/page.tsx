@@ -1,103 +1,227 @@
-import Image from "next/image";
+"use client"
+
+import { useState, useEffect } from "react"
+import { Dashboard } from "@/components/Dashboard"
+import { MileageForm } from "@/components/MileageForm"
+import { MileageHistory } from "@/components/MileageHistory"
+import { VehicleManagement } from "@/components/VehicleManagement"
+import { SupervisorManagement } from "@/components/SupervisorManagement"
+import { Button } from "@/components/ui/button"
+import { MileageEntry, Vehicle, Supervisor } from "@/types"
+import { BarChart3, Car, Users, Clock, Settings } from "lucide-react"
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'mileage' | 'history' | 'vehicles' | 'supervisors'>('dashboard')
+  const [mileageEntries, setMileageEntries] = useState<MileageEntry[]>([])
+  const [vehicles, setVehicles] = useState<Vehicle[]>([])
+  const [supervisors, setSupervisors] = useState<Supervisor[]>([])
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const savedEntries = localStorage.getItem('mileageEntries')
+    const savedVehicles = localStorage.getItem('vehicles')
+    const savedSupervisors = localStorage.getItem('supervisors')
+
+    if (savedEntries) {
+      setMileageEntries(JSON.parse(savedEntries))
+    }
+    if (savedVehicles) {
+      setVehicles(JSON.parse(savedVehicles))
+    } else {
+      // Add default vehicles
+      const defaultVehicles: Vehicle[] = [
+        { id: '1', name: 'Security Patrol Unit 1', licensePlate: 'SPU-001', isActive: true },
+        { id: '2', name: 'Security Patrol Unit 2', licensePlate: 'SPU-002', isActive: true }
+      ]
+      setVehicles(defaultVehicles)
+      localStorage.setItem('vehicles', JSON.stringify(defaultVehicles))
+    }
+    if (savedSupervisors) {
+      setSupervisors(JSON.parse(savedSupervisors))
+    } else {
+      // Add default supervisors
+      const defaultSupervisors: Supervisor[] = [
+        { id: '1', name: 'John Smith', badgeNumber: '12345', isActive: true },
+        { id: '2', name: 'Sarah Johnson', badgeNumber: '12346', isActive: true }
+      ]
+      setSupervisors(defaultSupervisors)
+      localStorage.setItem('supervisors', JSON.stringify(defaultSupervisors))
+    }
+  }, [])
+
+  // Save data to localStorage whenever state changes
+  useEffect(() => {
+    localStorage.setItem('mileageEntries', JSON.stringify(mileageEntries))
+  }, [mileageEntries])
+
+  useEffect(() => {
+    localStorage.setItem('vehicles', JSON.stringify(vehicles))
+  }, [vehicles])
+
+  useEffect(() => {
+    localStorage.setItem('supervisors', JSON.stringify(supervisors))
+  }, [supervisors])
+
+  // Mileage entry handlers
+  const handleAddMileageEntry = (entry: Omit<MileageEntry, 'id'>) => {
+    const newEntry: MileageEntry = {
+      ...entry,
+      id: Date.now().toString()
+    }
+    setMileageEntries(prev => [...prev, newEntry])
+  }
+
+  const handleEndShift = (entryId: string, endMileage: number, notes?: string) => {
+    setMileageEntries(prev => prev.map(entry => {
+      if (entry.id === entryId) {
+        const totalMiles = endMileage - entry.startMileage
+        return {
+          ...entry,
+          endTime: new Date().toISOString(),
+          endMileage,
+          totalMiles,
+          notes: notes || entry.notes,
+          status: 'completed' as const
+        }
+      }
+      return entry
+    }))
+  }
+
+  const handleDeleteEntry = (entryId: string) => {
+    setMileageEntries(prev => prev.filter(entry => entry.id !== entryId))
+  }
+
+  // Vehicle handlers
+  const handleAddVehicle = (vehicle: Omit<Vehicle, 'id'>) => {
+    const newVehicle: Vehicle = {
+      ...vehicle,
+      id: Date.now().toString()
+    }
+    setVehicles(prev => [...prev, newVehicle])
+  }
+
+  const handleUpdateVehicle = (id: string, updates: Partial<Vehicle>) => {
+    setVehicles(prev => prev.map(vehicle => 
+      vehicle.id === id ? { ...vehicle, ...updates } : vehicle
+    ))
+  }
+
+  const handleDeleteVehicle = (id: string) => {
+    setVehicles(prev => prev.filter(vehicle => vehicle.id !== id))
+  }
+
+  // Supervisor handlers
+  const handleAddSupervisor = (supervisor: Omit<Supervisor, 'id'>) => {
+    const newSupervisor: Supervisor = {
+      ...supervisor,
+      id: Date.now().toString()
+    }
+    setSupervisors(prev => [...prev, newSupervisor])
+  }
+
+  const handleUpdateSupervisor = (id: string, updates: Partial<Supervisor>) => {
+    setSupervisors(prev => prev.map(supervisor => 
+      supervisor.id === id ? { ...supervisor, ...updates } : supervisor
+    ))
+  }
+
+  const handleDeleteSupervisor = (id: string) => {
+    setSupervisors(prev => prev.filter(supervisor => supervisor.id !== id))
+  }
+
+  const activeEntry = mileageEntries.find(entry => entry.status === 'active')
+
+  const tabs = [
+    { id: 'dashboard' as const, label: 'Dashboard', icon: BarChart3 },
+    { id: 'mileage' as const, label: 'Mileage Entry', icon: Clock },
+    { id: 'history' as const, label: 'History', icon: Car },
+    { id: 'vehicles' as const, label: 'Vehicles', icon: Car },
+    { id: 'supervisors' as const, label: 'Supervisors', icon: Users }
+  ]
+
+  return (
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
+      {/* Header */}
+      <header className="bg-white dark:bg-neutral-800 shadow-sm border-b border-neutral-200 dark:border-neutral-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
+              <Settings className="h-8 w-8 text-blue-600" />
+              <div>
+                <h1 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+                  Security Vehicle Mile Tracker
+                </h1>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                  Professional mileage logging system
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+      </header>
+
+      {/* Navigation */}
+      <nav className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-8 overflow-x-auto">
+            {tabs.map((tab) => (
+              <Button
+                key={tab.id}
+                variant={activeTab === tab.id ? 'default' : 'ghost'}
+                onClick={() => setActiveTab(tab.id)}
+                className="flex items-center gap-2 whitespace-nowrap py-4 px-3"
+              >
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'dashboard' && (
+          <Dashboard entries={mileageEntries} vehicles={vehicles} />
+        )}
+        
+        {activeTab === 'mileage' && (
+          <MileageForm
+            vehicles={vehicles}
+            supervisors={supervisors}
+            onSubmit={handleAddMileageEntry}
+            activeEntry={activeEntry}
+            onEndShift={handleEndShift}
+          />
+        )}
+        
+        {activeTab === 'history' && (
+          <MileageHistory
+            entries={mileageEntries}
+            vehicles={vehicles}
+            onDeleteEntry={handleDeleteEntry}
+          />
+        )}
+        
+        {activeTab === 'vehicles' && (
+          <VehicleManagement
+            vehicles={vehicles}
+            onAddVehicle={handleAddVehicle}
+            onUpdateVehicle={handleUpdateVehicle}
+            onDeleteVehicle={handleDeleteVehicle}
+          />
+        )}
+        
+        {activeTab === 'supervisors' && (
+          <SupervisorManagement
+            supervisors={supervisors}
+            onAddSupervisor={handleAddSupervisor}
+            onUpdateSupervisor={handleUpdateSupervisor}
+            onDeleteSupervisor={handleDeleteSupervisor}
+          />
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
-  );
+  )
 }
