@@ -6,12 +6,13 @@ import { MileageForm } from "@/components/MileageForm"
 import { MileageHistory } from "@/components/MileageHistory"
 import { VehicleManagement } from "@/components/VehicleManagement"
 import { SupervisorManagement } from "@/components/SupervisorManagement"
+import { Reports } from "@/components/Reports"
 import { Button } from "@/components/ui/button"
 import { MileageEntry, Vehicle, Supervisor } from "@/types"
-import { BarChart3, Car, Users, Clock, Settings } from "lucide-react"
+import { BarChart3, Car, Users, Clock, Settings, FileText } from "lucide-react"
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'mileage' | 'history' | 'vehicles' | 'supervisors'>('dashboard')
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'mileage' | 'history' | 'vehicles' | 'supervisors' | 'reports'>('dashboard')
   const [mileageEntries, setMileageEntries] = useState<MileageEntry[]>([])
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [supervisors, setSupervisors] = useState<Supervisor[]>([])
@@ -136,6 +137,7 @@ export default function Home() {
     { id: 'dashboard' as const, label: 'Dashboard', icon: BarChart3 },
     { id: 'mileage' as const, label: 'Mileage Entry', icon: Clock },
     { id: 'history' as const, label: 'History', icon: Car },
+    { id: 'reports' as const, label: 'Reports', icon: FileText },
     { id: 'vehicles' as const, label: 'Vehicles', icon: Car },
     { id: 'supervisors' as const, label: 'Supervisors', icon: Users }
   ]
@@ -201,6 +203,14 @@ export default function Home() {
             entries={mileageEntries}
             vehicles={vehicles}
             onDeleteEntry={handleDeleteEntry}
+          />
+        )}
+        
+        {activeTab === 'reports' && (
+          <Reports
+            entries={mileageEntries}
+            vehicles={vehicles}
+            supervisors={supervisors}
           />
         )}
         
