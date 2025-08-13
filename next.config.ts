@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'standalone',
+  experimental: {
+    optimizePackageImports: ['framer-motion', 'lucide-react']
+  },
+  typescript: {
+    ignoreBuildErrors: false
+  },
+  eslint: {
+    ignoreDuringBuilds: false
+  }
 };
 
 export default nextConfig;

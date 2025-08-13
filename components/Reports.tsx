@@ -243,10 +243,10 @@ export function Reports({ entries, vehicles, supervisors }: ReportsProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div>
-              <label className="text-sm font-medium mb-2 block">Time Period</label>
-              <Select value={reportPeriod} onChange={(e) => setReportPeriod(e.target.value as ReportPeriod)}>
+              <label className="text-xs sm:text-sm font-medium mb-2 block">Time Period</label>
+              <Select value={reportPeriod} onChange={(e) => setReportPeriod(e.target.value as ReportPeriod)} className="text-sm">
                 <option value="today">Today</option>
                 <option value="week">Last 7 Days</option>
                 <option value="month">Last 30 Days</option>
@@ -255,8 +255,8 @@ export function Reports({ entries, vehicles, supervisors }: ReportsProps) {
             </div>
             
             <div>
-              <label className="text-sm font-medium mb-2 block">Report Type</label>
-              <Select value={reportType} onChange={(e) => setReportType(e.target.value as ReportType)}>
+              <label className="text-xs sm:text-sm font-medium mb-2 block">Report Type</label>
+              <Select value={reportType} onChange={(e) => setReportType(e.target.value as ReportType)} className="text-sm">
                 <option value="summary">Summary</option>
                 <option value="detailed">Detailed</option>
                 <option value="vehicle">By Vehicle</option>
@@ -265,8 +265,8 @@ export function Reports({ entries, vehicles, supervisors }: ReportsProps) {
             </div>
             
             <div>
-              <label className="text-sm font-medium mb-2 block">Filter by Vehicle</label>
-              <Select value={selectedVehicle} onChange={(e) => setSelectedVehicle(e.target.value)}>
+              <label className="text-xs sm:text-sm font-medium mb-2 block">Filter by Vehicle</label>
+              <Select value={selectedVehicle} onChange={(e) => setSelectedVehicle(e.target.value)} className="text-sm">
                 <option value="all">All Vehicles</option>
                 {vehicles.map(vehicle => (
                   <option key={vehicle.id} value={vehicle.id}>{vehicle.name}</option>
@@ -275,8 +275,8 @@ export function Reports({ entries, vehicles, supervisors }: ReportsProps) {
             </div>
             
             <div>
-              <label className="text-sm font-medium mb-2 block">Filter by Supervisor</label>
-              <Select value={selectedSupervisor} onChange={(e) => setSelectedSupervisor(e.target.value)}>
+              <label className="text-xs sm:text-sm font-medium mb-2 block">Filter by Supervisor</label>
+              <Select value={selectedSupervisor} onChange={(e) => setSelectedSupervisor(e.target.value)} className="text-sm">
                 <option value="all">All Supervisors</option>
                 {supervisors.map(supervisor => (
                   <option key={supervisor.id} value={supervisor.name}>{supervisor.name}</option>
@@ -284,16 +284,20 @@ export function Reports({ entries, vehicles, supervisors }: ReportsProps) {
               </Select>
             </div>
             
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium mb-2 block">Export</label>
-              <Button onClick={exportToCSV} variant="outline" size="sm" className="flex items-center gap-2">
-                <Download className="h-4 w-4" />
-                CSV
-              </Button>
-              <Button onClick={printReport} variant="outline" size="sm" className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                Print
-              </Button>
+            <div className="flex flex-col gap-2 sm:col-span-2 lg:col-span-1">
+              <label className="text-xs sm:text-sm font-medium mb-2 block">Export</label>
+              <div className="flex gap-2">
+                <Button onClick={exportToCSV} variant="outline" size="sm" className="flex items-center gap-1 sm:gap-2 flex-1 text-xs sm:text-sm">
+                  <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">CSV</span>
+                  <span className="sm:hidden">CSV</span>
+                </Button>
+                <Button onClick={printReport} variant="outline" size="sm" className="flex items-center gap-1 sm:gap-2 flex-1 text-xs sm:text-sm">
+                  <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Print</span>
+                  <span className="sm:hidden">Print</span>
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>
