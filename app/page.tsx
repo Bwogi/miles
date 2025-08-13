@@ -146,15 +146,15 @@ export default function Home() {
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
       {/* Header */}
       <header className="bg-white dark:bg-neutral-800 shadow-sm border-b border-neutral-200 dark:border-neutral-700">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Settings className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 flex-shrink-0" />
-              <div className="min-w-0">
-                <h1 className="text-lg sm:text-xl font-bold text-neutral-900 dark:text-neutral-100 truncate">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
+              <Settings className="h-8 w-8 text-blue-600" />
+              <div>
+                <h1 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
                   Security Vehicle Mile Tracker
                 </h1>
-                <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 hidden sm:block">
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">
                   Professional mileage logging system
                 </p>
               </div>
@@ -165,18 +165,17 @@ export default function Home() {
 
       {/* Navigation */}
       <nav className="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-          <div className="flex space-x-1 sm:space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-8 overflow-x-auto">
             {tabs.map((tab) => (
               <Button
                 key={tab.id}
                 variant={activeTab === tab.id ? 'default' : 'ghost'}
                 onClick={() => setActiveTab(tab.id)}
-                className="flex items-center gap-1 sm:gap-2 whitespace-nowrap py-3 sm:py-4 px-2 sm:px-3 text-xs sm:text-sm flex-shrink-0"
+                className="flex items-center gap-2 whitespace-nowrap py-4 px-3"
               >
-                <tab.icon className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="hidden xs:inline sm:inline">{tab.label}</span>
-                <span className="xs:hidden sm:hidden">{tab.label.split(' ')[0]}</span>
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
               </Button>
             ))}
           </div>
@@ -184,7 +183,7 @@ export default function Home() {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'dashboard' && (
           <Dashboard entries={mileageEntries} vehicles={vehicles} />
         )}

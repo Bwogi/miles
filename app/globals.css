@@ -1,31 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer utilities {
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-@layer base {
-  /* Custom responsive breakpoints */
-  @media (max-width: 480px) {
-    .xs\:hidden {
-      display: none;
-    }
-    .xs\:inline {
-      display: inline;
-    }
-    .xs\:block {
-      display: block;
-    }
-  }
-}
+@import "tailwindcss";
 
 :root {
   --background: #ffffff;

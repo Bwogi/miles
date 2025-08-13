@@ -77,43 +77,43 @@ export function MileageHistory({ entries, vehicles, onDeleteEntry }: MileageHist
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
                   <div className="flex items-center gap-2">
-                    <Car className="h-3 w-3 sm:h-4 sm:w-4 text-neutral-500 flex-shrink-0" />
-                    <div className="min-w-0">
+                    <Car className="h-4 w-4 text-neutral-500" />
+                    <div>
                       <p className="text-xs text-neutral-500">Vehicle</p>
-                      <p className="font-medium text-xs sm:text-sm truncate">{getVehicleName(entry.vehicleId)}</p>
+                      <p className="font-medium">{getVehicleName(entry.vehicleId)}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <User className="h-3 w-3 sm:h-4 sm:w-4 text-neutral-500 flex-shrink-0" />
-                    <div className="min-w-0">
+                    <User className="h-4 w-4 text-neutral-500" />
+                    <div>
                       <p className="text-xs text-neutral-500">Supervisor</p>
-                      <p className="font-medium text-xs sm:text-sm truncate">{entry.supervisorName}</p>
+                      <p className="font-medium">{entry.supervisorName}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-neutral-500 flex-shrink-0" />
-                    <div className="min-w-0">
+                    <Clock className="h-4 w-4 text-neutral-500" />
+                    <div>
                       <p className="text-xs text-neutral-500">Date</p>
-                      <p className="font-medium text-xs sm:text-sm">{formatDate(new Date(entry.date))}</p>
+                      <p className="font-medium">{formatDate(new Date(entry.date))}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-neutral-500 flex-shrink-0" />
-                    <div className="min-w-0">
+                    <MapPin className="h-4 w-4 text-neutral-500" />
+                    <div>
                       <p className="text-xs text-neutral-500">Total Miles</p>
-                      <p className="font-medium text-xs sm:text-sm">
+                      <p className="font-medium">
                         {entry.totalMiles ? `${entry.totalMiles.toLocaleString()} miles` : 'In Progress'}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div>
                     <p className="text-neutral-500">Start Time</p>
                     <p className="font-medium">{formatTime(new Date(entry.startTime))}</p>
