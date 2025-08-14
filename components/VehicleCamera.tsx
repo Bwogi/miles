@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
 import { VehiclePhotos } from "@/types"
-import { Camera, Check, RotateCcw, X } from "lucide-react"
+import { compressImage, validateImageSize, formatFileSize } from "@/lib/imageUtils"
+import { Camera, Check, RotateCcw, X, AlertTriangle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 interface VehicleCameraProps {
@@ -28,6 +29,8 @@ export function VehicleCamera({ photos, onPhotosChange, title, isRequired = fals
   const [isCapturing, setIsCapturing] = useState(false)
   const [currentPosition, setCurrentPosition] = useState<keyof VehiclePhotos | null>(null)
   const [stream, setStream] = useState<MediaStream | null>(null)
+  const [isCompressing, setIsCompressing] = useState(false)
+  const [compressionStatus, setCompressionStatus] = useState<string>('')
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -66,7 +69,7 @@ export function VehicleCamera({ photos, onPhotosChange, title, isRequired = fals
     setCurrentPosition(null)
   }, [stream])
 
-  const capturePhoto = useCallback(() => {
+  const capturePhoto = useCallback(async () => {
     if (!videoRef.current || !canvasRef.current || !currentPosition) return
 
     const video = videoRef.current
@@ -75,22 +78,80 @@ export function VehicleCamera({ photos, onPhotosChange, title, isRequired = fals
 
     if (!context) return
 
-    // Set canvas dimensions to match video
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
+    setIsCompressing(true)
+    setCompressionStatus('Capturing photo...')
 
-    // Draw video frame to canvas
-    context.drawImage(video, 0, 0, canvas.width, canvas.height)
+    try {
+      // Set canvas dimensions to match video
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
 
-    // Convert to base64 data URL
-    const photoDataUrl = canvas.toDataURL('image/jpeg', 0.8)
+      // Draw video frame to canvas
+      context.drawImage(video, 0, 0, canvas.width, canvas.height)
 
-    // Update photos
-    const updatedPhotos = {
-      ...photos,
-      [currentPosition]: photoDataUrl
+      setCompressionStatus('Compressing image...')
+
+      // Compress image using utility function
+      const compressedPhotoDataUrl = compressImage(canvas, {
+        maxWidth: 800,
+        maxHeight: 600,
+        quality: 0.5, // More aggressive compression
+        format: 'jpeg'
+      })
+
+      // Validate image size
+      const validation = validateImageSize(compressedPhotoDataUrl, 300) // 300KB limit
+      
+      if (!validation.isValid) {
+        setCompressionStatus('Applying additional compression...')
+        
+        // Try with even more compression if still too large
+        const superCompressed = compressImage(canvas, {
+          maxWidth: 600,
+          maxHeight: 450,
+          quality: 0.3,
+          format: 'jpeg'
+        })
+        
+        const finalValidation = validateImageSize(superCompressed, 300)
+        if (!finalValidation.isValid) {
+          setCompressionStatus('')
+          setIsCompressing(false)
+          alert(`Image too large (${finalValidation.formattedSize}). Please try again with better lighting or closer positioning.`)
+          return
+        }
+        
+        setCompressionStatus(`Compressed to ${finalValidation.formattedSize}`)
+        
+        // Update photos with super compressed version
+        const updatedPhotos = {
+          ...photos,
+          [currentPosition]: superCompressed
+        }
+        onPhotosChange(updatedPhotos)
+      } else {
+        setCompressionStatus(`Compressed to ${validation.formattedSize}`)
+        
+        // Update photos with normally compressed version
+        const updatedPhotos = {
+          ...photos,
+          [currentPosition]: compressedPhotoDataUrl
+        }
+        onPhotosChange(updatedPhotos)
+      }
+
+      // Clear status after delay
+      setTimeout(() => {
+        setCompressionStatus('')
+        setIsCompressing(false)
+      }, 2000)
+
+    } catch (error) {
+      console.error('Error compressing photo:', error)
+      setCompressionStatus('Compression failed')
+      setIsCompressing(false)
+      setTimeout(() => setCompressionStatus(''), 2000)
     }
-    onPhotosChange(updatedPhotos)
 
     // Stop camera
     stopCamera()
@@ -146,9 +207,14 @@ export function VehicleCamera({ photos, onPhotosChange, title, isRequired = fals
               <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4">
                 <Button
                   onClick={capturePhoto}
-                  className="bg-white text-black hover:bg-gray-200 rounded-full w-16 h-16"
+                  disabled={isCompressing}
+                  className="bg-white text-black hover:bg-gray-200 rounded-full w-16 h-16 disabled:opacity-50"
                 >
-                  <Camera className="h-6 w-6" />
+                  {isCompressing ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-black border-t-transparent" />
+                  ) : (
+                    <Camera className="h-6 w-6" />
+                  )}
                 </Button>
                 <Button
                   onClick={stopCamera}
@@ -158,6 +224,13 @@ export function VehicleCamera({ photos, onPhotosChange, title, isRequired = fals
                   <X className="h-4 w-4" />
                 </Button>
               </div>
+              
+              {/* Compression Status */}
+              {compressionStatus && (
+                <div className="absolute top-12 left-4 right-4 bg-black/70 text-white px-3 py-2 rounded-full text-sm text-center">
+                  {compressionStatus}
+                </div>
+              )}
               
               {/* Position Label */}
               <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">

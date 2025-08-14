@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
+import { PhotoViewer } from "./PhotoViewer"
 import { MileageEntry, Vehicle } from "@/types"
 import { formatDate, formatTime, getShiftLabel } from "@/lib/utils"
 import { Clock, Car, User, MapPin, FileText, Trash2 } from "lucide-react"
@@ -140,6 +141,14 @@ export function MileageHistory({ entries, vehicles, onDeleteEntry }: MileageHist
                     </div>
                   )}
                 </div>
+
+                {/* Vehicle Photos */}
+                <PhotoViewer
+                  startPhotos={entry.startPhotos}
+                  endPhotos={entry.endPhotos}
+                  title="Vehicle Inspection Photos"
+                  className="mt-4"
+                />
               </motion.div>
             ))}
           </div>
