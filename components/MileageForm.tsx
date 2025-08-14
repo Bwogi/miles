@@ -65,7 +65,7 @@ export function MileageForm({ vehicles, supervisors, onSubmit, activeEntry, onEn
     setFormData({ vehicleId: '', supervisorName: '', startMileage: '', endMileage: '', notes: '' })
   }
 
-  const selectedVehicle = vehicles.find(v => v.id === formData.vehicleId)
+  // const selectedVehicle = vehicles.find(v => v.id === formData.vehicleId)
   const isEndingShift = !!activeEntry
 
   return (
@@ -161,6 +161,9 @@ export function MileageForm({ vehicles, supervisors, onSubmit, activeEntry, onEn
                   placeholder="Enter starting mileage"
                   value={formData.startMileage}
                   onChange={(e) => setFormData(prev => ({ ...prev, startMileage: e.target.value }))}
+                  min="0"
+                  max="9999999"
+                  step="1"
                   required
                 />
               </div>
@@ -178,6 +181,9 @@ export function MileageForm({ vehicles, supervisors, onSubmit, activeEntry, onEn
                 placeholder="Enter ending mileage"
                 value={formData.endMileage}
                 onChange={(e) => setFormData(prev => ({ ...prev, endMileage: e.target.value }))}
+                min="0"
+                max="9999999"
+                step="1"
                 required
               />
             </div>

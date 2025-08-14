@@ -93,6 +93,7 @@ export function Dashboard({ entries, vehicles }: DashboardProps) {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
+                    Don&apos;t see your vehicle? Contact your administrator to add it.
                     <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
                       {stat.title}
                     </p>
@@ -114,7 +115,7 @@ export function Dashboard({ entries, vehicles }: DashboardProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              Today's Shift Summary
+              Today&apos;s Shift Summary
             </CardTitle>
           </CardHeader>
           <CardContent>

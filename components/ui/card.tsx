@@ -17,7 +17,7 @@ export function Card({ className, children, ...props }: CardProps) {
         "rounded-xl border border-neutral-200 bg-white p-6 shadow-sm dark:border-neutral-800 dark:bg-neutral-900",
         className
       )}
-      {...(props as any)}
+      {...(props as React.ComponentProps<typeof motion.div>)}
     >
       {children}
     </motion.div>

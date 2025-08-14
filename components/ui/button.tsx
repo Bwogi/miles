@@ -36,7 +36,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         ref={ref}
-        {...(props as any)}
+        {...(props as React.ComponentProps<typeof motion.button>)}
       />
     )
   }
