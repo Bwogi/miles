@@ -208,7 +208,7 @@ export default function Home() {
 
   const tabs = [
     { id: 'dashboard' as const, label: 'Dashboard', icon: BarChart3 },
-    { id: 'mileage' as const, label: 'Mileage Entry', icon: Clock },
+    // { id: 'mileage' as const, label: 'Mileage Entry', icon: Clock },
     { id: 'history' as const, label: 'History', icon: Car },
     { id: 'reports' as const, label: 'Reports', icon: FileText },
     { id: 'vehicles' as const, label: 'Vehicles', icon: Car },
