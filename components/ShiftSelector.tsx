@@ -1,14 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent } from "./ui/card"
+import { motion } from "framer-motion"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Badge } from "./ui/badge"
-import { Vehicle, Supervisor, MileageEntry } from "@/types"
+import { VehicleCamera } from "./VehicleCamera"
+import { Vehicle, Supervisor, MileageEntry, VehiclePhotos } from "@/types"
 import { getCurrentShift, getShiftLabel } from "@/lib/utils"
-import { Car, User, Clock, MapPin, Building, ArrowRight } from "lucide-react"
-import { motion } from "framer-motion"
+import { Car, User, Clock, MapPin, Building, ArrowRight, Sun, Moon } from "lucide-react"
 
 interface ShiftSelectorProps {
   vehicles: Vehicle[]
@@ -20,6 +21,7 @@ interface ShiftSelectorProps {
     startMileage: number
     startCondition: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'
     startConditionNotes?: string
+    startPhotos?: VehiclePhotos
   }) => void
   activeEntry?: MileageEntry
 }
@@ -31,6 +33,7 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
   const [selectedShift, setSelectedShift] = useState<'first' | 'second'>(getCurrentShift())
   const [startCondition, setStartCondition] = useState<'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'>('good')
   const [startConditionNotes, setStartConditionNotes] = useState('')
+  const [startPhotos, setStartPhotos] = useState<VehiclePhotos>({})
 
   const handleSubmit = () => {
     if (!selectedVehicle || !selectedSupervisor || !startMileage) {
@@ -44,7 +47,8 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
       shift: selectedShift,
       startMileage: parseInt(startMileage),
       startCondition: startCondition,
-      startConditionNotes: startConditionNotes.trim() || undefined
+      startConditionNotes: startConditionNotes.trim() || undefined,
+      startPhotos: Object.keys(startPhotos).length > 0 ? startPhotos : undefined
     })
 
     // Reset form
@@ -270,6 +274,16 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
               </div>
             </div>
 
+            {/* Vehicle Photo Documentation */}
+            <div className="mb-6">
+              <VehicleCamera
+                photos={startPhotos}
+                onPhotosChange={setStartPhotos}
+                title="Pre-Shift Vehicle Inspection Photos"
+                isRequired={true}
+              />
+            </div>
+
             {/* Access Button */}
             <Button
               onClick={handleSubmit}
@@ -285,7 +299,7 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
             {/* Footer */}
             <div className="mt-6 text-center">
               <p className="text-gray-500 text-xs">
-                You&apos;ll only see yards for your selected vehicle
+                You&apos;ll only see miles for your selected vehicle
               </p>
             </div>
           </CardContent>

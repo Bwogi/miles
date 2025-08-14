@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { MileageEntry, Vehicle, Supervisor } from '@/types'
+import { MileageEntry, Vehicle, Supervisor, VehiclePhotos } from '@/types'
 import { vehicleAPI, supervisorAPI, mileageAPI } from '@/lib/api'
 
 export function useData() {
@@ -163,7 +163,7 @@ export function useData() {
     }
   }
 
-  const endShift = async (entryId: string, endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string) => {
+  const endShift = async (entryId: string, endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string, endPhotos?: VehiclePhotos) => {
     const entry = mileageEntries.find(e => e.id === entryId)
     if (!entry) throw new Error('Entry not found')
 
@@ -175,7 +175,8 @@ export function useData() {
       notes: notes || entry.notes,
       status: 'completed' as const,
       endCondition,
-      endConditionNotes
+      endConditionNotes,
+      endPhotos
     }
 
     return updateMileageEntry(entryId, updates)

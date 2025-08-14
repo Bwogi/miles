@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Badge } from "./ui/badge"
-import { MileageEntry, Vehicle } from "@/types"
+import { VehicleCamera } from "./VehicleCamera"
+import { MileageEntry, Vehicle, VehiclePhotos } from "@/types"
 import { formatTime, getShiftLabel } from "@/lib/utils"
 import { Car, Clock, MapPin, User, LogOut, FileText } from "lucide-react"
 import { motion } from "framer-motion"
@@ -13,7 +14,7 @@ import { motion } from "framer-motion"
 interface ActiveShiftDashboardProps {
   activeEntry: MileageEntry
   vehicle: Vehicle
-  onEndShift: (endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string) => void
+  onEndShift: (endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string, endPhotos?: VehiclePhotos) => void
   onLogout: () => void
 }
 
@@ -28,6 +29,7 @@ export function ActiveShiftDashboard({
   const [showEndShift, setShowEndShift] = useState(false)
   const [endCondition, setEndCondition] = useState<'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'>('good')
   const [endConditionNotes, setEndConditionNotes] = useState('')
+  const [endPhotos, setEndPhotos] = useState<VehiclePhotos>({})
 
   const handleEndShift = () => {
     if (!endMileage) {
@@ -41,12 +43,13 @@ export function ActiveShiftDashboard({
       return
     }
 
-    onEndShift(endMileageNum, notes, endCondition, endConditionNotes.trim() || undefined)
+    onEndShift(endMileageNum, notes, endCondition, endConditionNotes.trim() || undefined, Object.keys(endPhotos).length > 0 ? endPhotos : undefined)
     setShowEndShift(false)
     setEndMileage('')
     setNotes('')
     setEndCondition('good')
     setEndConditionNotes('')
+    setEndPhotos({})
   }
 
   const currentTime = new Date()
@@ -321,6 +324,16 @@ export function ActiveShiftDashboard({
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       className="w-full min-h-[80px] bg-gray-800/50 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                    />
+                  </div>
+
+                  {/* End-of-Shift Photo Documentation */}
+                  <div>
+                    <VehicleCamera
+                      photos={endPhotos}
+                      onPhotosChange={setEndPhotos}
+                      title="Post-Shift Vehicle Inspection Photos"
+                      isRequired={true}
                     />
                   </div>
                   

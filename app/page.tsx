@@ -11,7 +11,7 @@ import { SupervisorManagement } from "@/components/SupervisorManagement"
 import { Reports } from "@/components/Reports"
 import { Button } from "@/components/ui/button"
 import { useData } from "@/hooks/useData"
-import { Vehicle, Supervisor } from "@/types"
+import { Vehicle, Supervisor, VehiclePhotos } from "@/types"
 import { BarChart3, Car, Users, Clock, Settings, FileText, Loader2, AlertTriangle } from "lucide-react"
 
 export default function Home() {
@@ -45,6 +45,7 @@ export default function Home() {
     startMileage: number
     startCondition: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'
     startConditionNotes?: string
+    startPhotos?: VehiclePhotos
   }) => {
     try {
       const now = new Date()
@@ -58,7 +59,8 @@ export default function Home() {
         status: 'active' as const,
         notes: `Shift started`,
         startCondition: data.startCondition,
-        startConditionNotes: data.startConditionNotes
+        startConditionNotes: data.startConditionNotes,
+        startPhotos: data.startPhotos
       }
       await addMileageEntry(shiftData)
       
@@ -73,11 +75,11 @@ export default function Home() {
     }
   }
 
-  const handleEndShift = async (endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string) => {
+  const handleEndShift = async (endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string, endPhotos?: VehiclePhotos) => {
     if (!activeEntry) return
     
     try {
-      await endShift(activeEntry.id, endMileage, notes, endCondition, endConditionNotes)
+      await endShift(activeEntry.id, endMileage, notes, endCondition, endConditionNotes, endPhotos)
       // Clear user session after successful shift completion
       setCurrentUserSession(null)
       localStorage.removeItem('currentUserSession')
