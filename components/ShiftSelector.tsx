@@ -279,7 +279,7 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
               <VehicleCamera
                 photos={startPhotos}
                 onPhotosChange={setStartPhotos}
-                title="Pre-Shift Vehicle Inspection Photos"
+                title="Images"
                 isRequired={true}
               />
             </div>

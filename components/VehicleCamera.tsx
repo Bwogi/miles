@@ -249,7 +249,7 @@ export function VehicleCamera({ photos, onPhotosChange, title, isRequired = fals
               <motion.div
                 key={position.key}
                 whileHover={{ scale: 1.02 }}
-                className={`relative border-2 border-dashed rounded-lg p-4 transition-all ${
+                className={`relative border-2 border-dashed rounded-lg p-2 transition-all ${
                   hasPhoto 
                     ? 'border-green-500 bg-green-500/10' 
                     : 'border-gray-600 bg-gray-800/30 hover:border-gray-500'
