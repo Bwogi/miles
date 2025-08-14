@@ -61,7 +61,7 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
   const activeSupervisors = supervisors.filter(s => s.isActive)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 flex items-center justify-center p-2">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
