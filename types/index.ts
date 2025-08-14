@@ -18,6 +18,10 @@ export interface MileageEntry {
   totalMiles?: number
   notes?: string
   status: 'active' | 'completed'
+  startCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'
+  startConditionNotes?: string
+  endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'
+  endConditionNotes?: string
 }
 
 export interface Supervisor {

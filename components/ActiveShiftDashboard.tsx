@@ -13,7 +13,7 @@ import { motion } from "framer-motion"
 interface ActiveShiftDashboardProps {
   activeEntry: MileageEntry
   vehicle: Vehicle
-  onEndShift: (endMileage: number, notes?: string) => void
+  onEndShift: (endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string) => void
   onLogout: () => void
 }
 
@@ -26,6 +26,8 @@ export function ActiveShiftDashboard({
   const [endMileage, setEndMileage] = useState('')
   const [notes, setNotes] = useState('')
   const [showEndShift, setShowEndShift] = useState(false)
+  const [endCondition, setEndCondition] = useState<'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'>('good')
+  const [endConditionNotes, setEndConditionNotes] = useState('')
 
   const handleEndShift = () => {
     if (!endMileage) {
@@ -39,10 +41,12 @@ export function ActiveShiftDashboard({
       return
     }
 
-    onEndShift(endMileageNum, notes)
+    onEndShift(endMileageNum, notes, endCondition, endConditionNotes.trim() || undefined)
     setShowEndShift(false)
     setEndMileage('')
     setNotes('')
+    setEndCondition('good')
+    setEndConditionNotes('')
   }
 
   const currentTime = new Date()
@@ -85,7 +89,7 @@ export function ActiveShiftDashboard({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
         >
           <Card className="bg-gray-900/90 backdrop-blur-lg border-gray-700">
             <CardContent className="p-6">
@@ -135,6 +139,36 @@ export function ActiveShiftDashboard({
               </div>
               <div className="text-sm text-gray-400">
                 Starting mileage
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Vehicle Condition Card */}
+          <Card className="bg-gray-900/90 backdrop-blur-lg border-gray-700">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Car className="h-5 w-5 text-green-400" />
+                <span className="text-gray-300 font-medium">Start Condition</span>
+              </div>
+              <div className="space-y-2">
+                <div className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
+                  activeEntry.startCondition === 'excellent' ? 'bg-green-600/20 text-green-300' :
+                  activeEntry.startCondition === 'good' ? 'bg-blue-600/20 text-blue-300' :
+                  activeEntry.startCondition === 'fair' ? 'bg-yellow-600/20 text-yellow-300' :
+                  activeEntry.startCondition === 'poor' ? 'bg-orange-600/20 text-orange-300' :
+                  activeEntry.startCondition === 'needs_attention' ? 'bg-red-600/20 text-red-300' :
+                  'bg-gray-600/20 text-gray-300'
+                }`}>
+                  {activeEntry.startCondition ? 
+                    activeEntry.startCondition.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : 
+                    'Not Recorded'
+                  }
+                </div>
+                {activeEntry.startConditionNotes && (
+                  <div className="text-sm text-gray-400 mt-1">
+                    {activeEntry.startConditionNotes}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -221,9 +255,66 @@ export function ActiveShiftDashboard({
                     />
                   </div>
                   
+                  {/* Vehicle Condition Assessment */}
+                  <div>
+                    <label className="block text-gray-300 text-sm font-medium mb-3">
+                      Final Vehicle Condition Assessment
+                    </label>
+                    <div className="space-y-3">
+                      {/* Condition Rating */}
+                      <div>
+                        <label className="block text-gray-400 text-xs font-medium mb-2">
+                          Overall Condition
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { value: 'excellent', label: 'Excellent', color: 'bg-green-600/20 border-green-500 text-green-300' },
+                            { value: 'good', label: 'Good', color: 'bg-blue-600/20 border-blue-500 text-blue-300' },
+                            { value: 'fair', label: 'Fair', color: 'bg-yellow-600/20 border-yellow-500 text-yellow-300' },
+                            { value: 'poor', label: 'Poor', color: 'bg-orange-600/20 border-orange-500 text-orange-300' },
+                            { value: 'needs_attention', label: 'Needs Attention', color: 'bg-red-600/20 border-red-500 text-red-300' }
+                          ].map((condition) => (
+                            <motion.button
+                              key={condition.value}
+                              type="button"
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={() => setEndCondition(condition.value as 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention')}
+                              className={`p-2 rounded-lg border transition-all text-sm ${
+                                endCondition === condition.value
+                                  ? condition.color
+                                  : 'bg-gray-800/30 border-gray-600 text-gray-300 hover:border-gray-500'
+                              }`}
+                            >
+                              {condition.label}
+                            </motion.button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Condition Notes */}
+                      <div>
+                        <label className="block text-gray-400 text-xs font-medium mb-2">
+                          Condition Notes (Optional)
+                        </label>
+                        <textarea
+                          placeholder="Any new issues, damage, or observations..."
+                          value={endConditionNotes}
+                          onChange={(e) => setEndConditionNotes(e.target.value)}
+                          className="w-full p-3 rounded-lg bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 resize-none"
+                          rows={2}
+                          maxLength={200}
+                        />
+                        <div className="text-right text-xs text-gray-500 mt-1">
+                          {endConditionNotes.length}/200
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-gray-300 text-sm font-medium mb-2">
-                      Notes (Optional)
+                      Shift Notes (Optional)
                     </label>
                     <textarea
                       placeholder="Any notes about the shift..."

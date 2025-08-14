@@ -163,7 +163,7 @@ export function useData() {
     }
   }
 
-  const endShift = async (entryId: string, endMileage: number, notes?: string) => {
+  const endShift = async (entryId: string, endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string) => {
     const entry = mileageEntries.find(e => e.id === entryId)
     if (!entry) throw new Error('Entry not found')
 
@@ -173,7 +173,9 @@ export function useData() {
       endMileage,
       totalMiles,
       notes: notes || entry.notes,
-      status: 'completed' as const
+      status: 'completed' as const,
+      endCondition,
+      endConditionNotes
     }
 
     return updateMileageEntry(entryId, updates)

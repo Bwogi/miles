@@ -43,6 +43,8 @@ export default function Home() {
     supervisorName: string
     shift: 'first' | 'second'
     startMileage: number
+    startCondition: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'
+    startConditionNotes?: string
   }) => {
     try {
       const now = new Date()
@@ -54,7 +56,9 @@ export default function Home() {
         date: now.toISOString().split('T')[0],
         startTime: now.toISOString(),
         status: 'active' as const,
-        notes: `Shift started`
+        notes: `Shift started`,
+        startCondition: data.startCondition,
+        startConditionNotes: data.startConditionNotes
       }
       await addMileageEntry(shiftData)
       
@@ -69,11 +73,11 @@ export default function Home() {
     }
   }
 
-  const handleEndShift = async (endMileage: number, notes?: string) => {
+  const handleEndShift = async (endMileage: number, notes?: string, endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention', endConditionNotes?: string) => {
     if (!activeEntry) return
     
     try {
-      await endShift(activeEntry.id, endMileage, notes)
+      await endShift(activeEntry.id, endMileage, notes, endCondition, endConditionNotes)
       // Clear user session after successful shift completion
       setCurrentUserSession(null)
       localStorage.removeItem('currentUserSession')

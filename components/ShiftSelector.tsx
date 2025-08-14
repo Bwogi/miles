@@ -18,6 +18,8 @@ interface ShiftSelectorProps {
     supervisorName: string
     shift: 'first' | 'second'
     startMileage: number
+    startCondition: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'
+    startConditionNotes?: string
   }) => void
   activeEntry?: MileageEntry
 }
@@ -27,6 +29,8 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
   const [selectedSupervisor, setSelectedSupervisor] = useState<string>('')
   const [startMileage, setStartMileage] = useState('')
   const [selectedShift, setSelectedShift] = useState<'first' | 'second'>(getCurrentShift())
+  const [startCondition, setStartCondition] = useState<'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'>('good')
+  const [startConditionNotes, setStartConditionNotes] = useState('')
 
   const handleSubmit = () => {
     if (!selectedVehicle || !selectedSupervisor || !startMileage) {
@@ -38,7 +42,9 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
       vehicleId: selectedVehicle,
       supervisorName: selectedSupervisor,
       shift: selectedShift,
-      startMileage: parseInt(startMileage)
+      startMileage: parseInt(startMileage),
+      startCondition: startCondition,
+      startConditionNotes: startConditionNotes.trim() || undefined
     })
 
     // Reset form
@@ -205,6 +211,63 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
                 max="9999999"
                 step="1"
               />
+            </div>
+
+            {/* Vehicle Condition Assessment */}
+            <div className="mb-6">
+              <label className="block text-gray-300 text-sm font-medium mb-3">
+                Vehicle Condition Assessment
+              </label>
+              <div className="space-y-3">
+                {/* Condition Rating */}
+                <div>
+                  <label className="block text-gray-400 text-xs font-medium mb-2">
+                    Overall Condition
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { value: 'excellent', label: 'Excellent', color: 'bg-green-600/20 border-green-500 text-green-300' },
+                      { value: 'good', label: 'Good', color: 'bg-blue-600/20 border-blue-500 text-blue-300' },
+                      { value: 'fair', label: 'Fair', color: 'bg-yellow-600/20 border-yellow-500 text-yellow-300' },
+                      { value: 'poor', label: 'Poor', color: 'bg-orange-600/20 border-orange-500 text-orange-300' },
+                      { value: 'needs_attention', label: 'Needs Attention', color: 'bg-red-600/20 border-red-500 text-red-300' }
+                    ].map((condition) => (
+                      <motion.button
+                        key={condition.value}
+                        type="button"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setStartCondition(condition.value as 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention')}
+                        className={`p-2 rounded-lg border transition-all text-sm ${
+                          startCondition === condition.value
+                            ? condition.color
+                            : 'bg-gray-800/30 border-gray-600 text-gray-300 hover:border-gray-500'
+                        }`}
+                      >
+                        {condition.label}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Condition Notes */}
+                <div>
+                  <label className="block text-gray-400 text-xs font-medium mb-2">
+                    Notes (Optional)
+                  </label>
+                  <textarea
+                    placeholder="Any issues, damage, or observations..."
+                    value={startConditionNotes}
+                    onChange={(e) => setStartConditionNotes(e.target.value)}
+                    className="w-full p-3 rounded-lg bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 resize-none"
+                    rows={2}
+                    maxLength={200}
+                  />
+                  <div className="text-right text-xs text-gray-500 mt-1">
+                    {startConditionNotes.length}/200
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Access Button */}
