@@ -105,6 +105,36 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
               </div>
             </div>
 
+            {/* Supervisor Selection */}
+            <div className="mb-6">
+              <label className="block text-gray-300 text-sm font-medium mb-3">
+                Supervisor Identification
+              </label>
+              <div className="space-y-2">
+                {activeSupervisors.map((supervisor) => (
+                  <motion.button
+                    key={supervisor.id}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedSupervisor(supervisor.name)}
+                    className={`w-full p-3 rounded-lg border transition-all ${
+                      selectedSupervisor === supervisor.name
+                        ? 'bg-green-600/20 border-green-500 text-green-300'
+                        : 'bg-gray-800/30 border-gray-600 text-gray-300 hover:border-gray-500'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <User className="h-4 w-4" />
+                      <div className="text-left">
+                        <div className="font-medium">{supervisor.name}</div>
+                        <div className="text-sm opacity-75">Badge #{supervisor.badgeNumber}</div>
+                      </div>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+
              {/* Shift Selection */}
              <div className="mb-6">
               <label className="block text-gray-300 text-sm font-medium mb-3">
@@ -155,36 +185,6 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
                 <Badge variant={selectedShift === 'first' ? 'default' : 'secondary'} className="text-xs">
                   {getShiftLabel(selectedShift)}
                 </Badge>
-              </div>
-            </div>
-
-            {/* Supervisor Selection */}
-            <div className="mb-6">
-              <label className="block text-gray-300 text-sm font-medium mb-3">
-                Select Supervisor
-              </label>
-              <div className="space-y-2">
-                {activeSupervisors.map((supervisor) => (
-                  <motion.button
-                    key={supervisor.id}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedSupervisor(supervisor.name)}
-                    className={`w-full p-3 rounded-lg border transition-all ${
-                      selectedSupervisor === supervisor.name
-                        ? 'bg-green-600/20 border-green-500 text-green-300'
-                        : 'bg-gray-800/30 border-gray-600 text-gray-300 hover:border-gray-500'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <User className="h-4 w-4" />
-                      <div className="text-left">
-                        <div className="font-medium">{supervisor.name}</div>
-                        <div className="text-sm opacity-75">Badge #{supervisor.badgeNumber}</div>
-                      </div>
-                    </div>
-                  </motion.button>
-                ))}
               </div>
             </div>
 
