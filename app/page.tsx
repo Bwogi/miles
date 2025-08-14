@@ -18,6 +18,7 @@ export default function Home() {
   const [view, setView] = useState<'selector' | 'active' | 'admin'>('selector')
   const [activeTab, setActiveTab] = useState<'dashboard' | 'mileage' | 'history' | 'vehicles' | 'supervisors' | 'reports'>('dashboard')
   const [allowLogout, setAllowLogout] = useState(false)
+  const [currentUserSession, setCurrentUserSession] = useState<string | null>(null)
   
   const {
     mileageEntries,
@@ -40,6 +41,7 @@ export default function Home() {
   const handleStartShift = async (data: {
     vehicleId: string
     supervisorName: string
+    shift: 'first' | 'second'
     startMileage: number
   }) => {
     try {
@@ -47,14 +49,19 @@ export default function Home() {
       const shiftData = {
         vehicleId: data.vehicleId,
         supervisorName: data.supervisorName,
+        shift: data.shift,
         startMileage: data.startMileage,
-        shift: 'first' as const, // Will be determined by current time
         date: now.toISOString().split('T')[0],
         startTime: now.toISOString(),
         status: 'active' as const,
         notes: `Shift started`
       }
       await addMileageEntry(shiftData)
+      
+      // Save current user session to localStorage
+      setCurrentUserSession(data.supervisorName)
+      localStorage.setItem('currentUserSession', data.supervisorName)
+      
       setView('active')
     } catch (error) {
       console.error('Failed to start shift:', error)
@@ -67,6 +74,9 @@ export default function Home() {
     
     try {
       await endShift(activeEntry.id, endMileage, notes)
+      // Clear user session after successful shift completion
+      setCurrentUserSession(null)
+      localStorage.removeItem('currentUserSession')
       // Allow logout after successful shift completion
       setAllowLogout(true)
       // Automatically return to selector after shift completion
@@ -81,6 +91,9 @@ export default function Home() {
   }
 
   const handleLogout = () => {
+    // Clear user session on logout
+    setCurrentUserSession(null)
+    localStorage.removeItem('currentUserSession')
     setAllowLogout(true)
     setView('selector')
     // Reset allowLogout after a brief delay to prevent issues
@@ -158,7 +171,18 @@ export default function Home() {
     }
   }
 
-  const activeEntry = mileageEntries.find(entry => !entry.endTime)
+  // Load current user session from localStorage on mount
+  useEffect(() => {
+    const savedSession = localStorage.getItem('currentUserSession')
+    if (savedSession) {
+      setCurrentUserSession(savedSession)
+    }
+  }, [])
+
+  // Find active entry for the current user only (not global)
+  const activeEntry = currentUserSession 
+    ? mileageEntries.find(entry => !entry.endTime && entry.supervisorName === currentUserSession)
+    : undefined
   const currentVehicle = activeEntry ? vehicles.find(v => v.id === activeEntry.vehicleId) : null
   
   // Debug vehicle lookup issue
