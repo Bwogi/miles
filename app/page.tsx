@@ -240,7 +240,7 @@ export default function Home() {
           activeEntry={activeEntry}
         />
         {(!activeEntry || !currentVehicle) && (
-          <div className="fixed bottom-4 right-4">
+          <div className="fixed bottom-4 right-4 hidden md:block">
             <Button
               onClick={handleAdminAccess}
               variant="outline"

@@ -93,7 +93,7 @@ export function Dashboard({ entries, vehicles }: DashboardProps) {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    Don&apos;t see your vehicle? Contact your administrator to add it.
+                    {/* Don&apos;t see your vehicle? Contact your administrator to add it. */}
                     <p className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
                       {stat.title}
                     </p>
