@@ -333,7 +333,7 @@ export function ActiveShiftDashboard({
                       photos={endPhotos}
                       onPhotosChange={setEndPhotos}
                       title="Post-Shift Vehicle Inspection Photos"
-                      isRequired={true}
+                      isRequired={false}
                     />
                   </div>
                   

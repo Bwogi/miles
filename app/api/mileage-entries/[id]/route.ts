@@ -24,7 +24,13 @@ export async function PUT(
         endMileage: body.endMileage,
         totalMiles: body.totalMiles,
         notes: body.notes,
-        status: body.status
+        status: body.status,
+        startCondition: body.startCondition,
+        startConditionNotes: body.startConditionNotes,
+        endCondition: body.endCondition,
+        endConditionNotes: body.endConditionNotes,
+        startPhotos: body.startPhotos,
+        endPhotos: body.endPhotos
       },
       { new: true, runValidators: true }
     )

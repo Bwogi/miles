@@ -13,6 +13,12 @@ export interface IMileageEntry {
   totalMiles?: number
   notes?: string
   status: 'active' | 'completed'
+  startCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'
+  startConditionNotes?: string
+  endCondition?: 'excellent' | 'good' | 'fair' | 'poor' | 'needs_attention'
+  endConditionNotes?: string
+  startPhotos?: Record<string, string>
+  endPhotos?: Record<string, string>
   createdAt?: Date
   updatedAt?: Date
 }
@@ -71,6 +77,36 @@ const MileageEntrySchema = new mongoose.Schema<IMileageEntry>({
     required: [true, 'Status is required'],
     enum: ['active', 'completed'],
     default: 'active'
+  },
+  startCondition: {
+    type: String,
+    enum: ['excellent', 'good', 'fair', 'poor', 'needs_attention'],
+    default: null
+  },
+  startConditionNotes: {
+    type: String,
+    trim: true,
+    maxlength: [200, 'Start condition notes cannot exceed 200 characters'],
+    default: null
+  },
+  endCondition: {
+    type: String,
+    enum: ['excellent', 'good', 'fair', 'poor', 'needs_attention'],
+    default: null
+  },
+  endConditionNotes: {
+    type: String,
+    trim: true,
+    maxlength: [200, 'End condition notes cannot exceed 200 characters'],
+    default: null
+  },
+  startPhotos: {
+    type: mongoose.Schema.Types.Mixed,
+    default: null
+  },
+  endPhotos: {
+    type: mongoose.Schema.Types.Mixed,
+    default: null
   }
 }, {
   timestamps: true,

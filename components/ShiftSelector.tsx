@@ -280,7 +280,7 @@ export function ShiftSelector({ vehicles, supervisors, onStartShift }: ShiftSele
                 photos={startPhotos}
                 onPhotosChange={setStartPhotos}
                 title="Images"
-                isRequired={true}
+                isRequired={false}
               />
             </div>
 

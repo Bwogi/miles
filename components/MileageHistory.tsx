@@ -20,6 +20,15 @@ export function MileageHistory({ entries, vehicles, onDeleteEntry }: MileageHist
     new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
   )
 
+  // Debug logging for photo data
+  console.log('MileageHistory Debug - All entries:', entries.map(entry => ({
+    id: entry.id,
+    startPhotos: entry.startPhotos,
+    endPhotos: entry.endPhotos,
+    hasStartPhotos: entry.startPhotos && Object.keys(entry.startPhotos).length > 0,
+    hasEndPhotos: entry.endPhotos && Object.keys(entry.endPhotos).length > 0
+  })))
+
   const getVehicleName = (vehicleId: string) => {
     return vehicles.find(v => v.id === vehicleId)?.name || 'Unknown Vehicle'
   }

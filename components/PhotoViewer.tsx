@@ -28,6 +28,14 @@ export function PhotoViewer({ startPhotos, endPhotos, title, className = "" }: P
   const [selectedPhoto, setSelectedPhoto] = useState<{ src: string; label: string; type: 'start' | 'end' } | null>(null)
   const [showPhotos, setShowPhotos] = useState(false)
 
+  // Debug logging
+  console.log('PhotoViewer Debug:', {
+    startPhotos,
+    endPhotos,
+    startPhotosKeys: startPhotos ? Object.keys(startPhotos) : [],
+    endPhotosKeys: endPhotos ? Object.keys(endPhotos) : []
+  })
+
   const hasStartPhotos = startPhotos && Object.keys(startPhotos).length > 0
   const hasEndPhotos = endPhotos && Object.keys(endPhotos).length > 0
   const hasAnyPhotos = hasStartPhotos || hasEndPhotos
