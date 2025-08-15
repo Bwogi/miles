@@ -44,8 +44,8 @@ export async function sendLocalNotification(payload: NotificationPayload): Promi
 
   const notification = new Notification(payload.title, {
     body: payload.body,
-    icon: payload.icon || '/icon-192x192.png',
-    badge: payload.badge || '/icon-72x72.png',
+    icon: payload.icon || '/icons/icon-192x192.svg',
+    badge: payload.badge || '/icons/icon-72x72.svg',
     tag: payload.tag,
     data: payload.data
     // Note: actions are only supported in service worker push notifications

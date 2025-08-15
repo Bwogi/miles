@@ -23,8 +23,8 @@ export async function POST(request: NextRequest) {
     const notificationPayload = {
       title,
       body,
-      icon: '/icon-192x192.png',
-      badge: '/icon-72x72.png',
+      icon: '/icons/icon-192x192.svg',
+      badge: '/icons/icon-72x72.svg',
       data: data || {},
       actions: [
         { action: 'view', title: 'View' },

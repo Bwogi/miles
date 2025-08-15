@@ -9,7 +9,7 @@ import { Badge } from "./ui/badge"
 import { Vehicle, Supervisor } from "@/types"
 import { Bell, Send, Users, Car, AlertTriangle, Clock, CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
-import { SecurityNotifications, NotificationTemplates } from "@/lib/notifications"
+import { SecurityNotifications, NotificationTemplates, sendLocalNotification } from "@/lib/notifications"
 
 interface NotificationManagerProps {
   vehicles: Vehicle[]
@@ -82,6 +82,18 @@ export function NotificationManager({ vehicles, supervisors }: NotificationManag
       return
     }
 
+    // Request notification permission first
+    if ('Notification' in window) {
+      const permission = await Notification.requestPermission()
+      if (permission !== 'granted') {
+        alert('Please allow notifications to send alerts to your device')
+        return
+      }
+    } else {
+      alert('This browser does not support notifications')
+      return
+    }
+
     setSending(true)
     
     try {
@@ -132,8 +144,8 @@ export function NotificationManager({ vehicles, supervisors }: NotificationManag
         }
       }
 
-      // Send the notification
-      await SecurityNotifications.notifyShiftStart('Test User') // This will be replaced with actual targeting
+      // Send the notification using the proper method
+      await sendLocalNotification(notification)
       
       setLastSent(`${notification.title} sent to ${targetType === 'all' ? 'all users' : targetType}`)
       
@@ -337,7 +349,26 @@ export function NotificationManager({ vehicles, supervisors }: NotificationManag
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <Button
+              variant="outline"
+              onClick={async () => {
+                try {
+                  await sendLocalNotification({
+                    title: '🔔 Test Notification',
+                    body: 'This is a test notification to verify the system is working!',
+                    tag: 'test'
+                  })
+                  setLastSent('Test notification sent successfully')
+                } catch (error) {
+                  alert('Test notification failed. Check browser permissions.')
+                }
+              }}
+              className="flex items-center gap-2 bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+            >
+              <Bell className="h-4 w-4" />
+              Test Notification
+            </Button>
             <Button
               variant="outline"
               onClick={() => {

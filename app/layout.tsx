@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -18,8 +18,6 @@ export const metadata: Metadata = {
   title: "Security Vehicle Mileage Tracker",
   description: "Professional vehicle mileage tracking and condition reporting for security operations",
   manifest: "/manifest.json",
-  themeColor: "#2563eb",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -43,6 +41,15 @@ export const metadata: Metadata = {
     "msapplication-TileColor": "#2563eb",
     "msapplication-config": "/browserconfig.xml"
   }
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#2563eb"
 };
 
 export default function RootLayout({
