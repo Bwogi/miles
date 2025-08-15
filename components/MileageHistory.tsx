@@ -117,7 +117,7 @@ export function MileageHistory({ entries, vehicles, onDeleteEntry }: MileageHist
                     <div>
                       <p className="text-xs text-neutral-500">Total Miles</p>
                       <p className="font-medium">
-                        {entry.totalMiles ? `${entry.totalMiles.toLocaleString()} miles` : 'In Progress'}
+                        {entry.totalMiles !== null && entry.totalMiles !== undefined ? `${entry.totalMiles.toLocaleString()} miles` : 'In Progress'}
                       </p>
                     </div>
                   </div>
