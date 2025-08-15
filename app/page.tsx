@@ -7,6 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { ShiftSelector } from "@/components/ShiftSelector"
 import { ActiveShiftDashboard } from "@/components/ActiveShiftDashboard"
 import { MileageHistory } from "@/components/MileageHistory"
+import { VehicleManagement } from "@/components/VehicleManagement"
+import { SupervisorManagement } from "@/components/SupervisorManagement"
+import { Reports } from "@/components/Reports"
+import { Dashboard } from "@/components/Dashboard"
 import { PWAInstaller, useServiceWorker } from "@/components/PWAInstaller"
 import { useData } from "@/hooks/useData"
 import { MileageEntry, Vehicle, Supervisor, VehiclePhotos } from "@/types"
@@ -387,11 +391,10 @@ export default function Home() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'dashboard' && (
-          <div className="text-center py-12">
-            <BarChart3 className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Dashboard</h3>
-            <p className="text-gray-600">Analytics and overview coming soon</p>
-          </div>
+          <Dashboard
+            entries={mileageEntries}
+            vehicles={vehicles}
+          />
         )}
         
         {activeTab === 'mileage' && (
@@ -411,27 +414,29 @@ export default function Home() {
         )}
         
         {activeTab === 'reports' && (
-          <div className="text-center py-12">
-            <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Reports</h3>
-            <p className="text-gray-600">Advanced reporting features coming soon</p>
-          </div>
+          <Reports
+            entries={mileageEntries}
+            vehicles={vehicles}
+            supervisors={supervisors}
+          />
         )}
         
         {activeTab === 'vehicles' && (
-          <div className="text-center py-12">
-            <Car className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Vehicle Management</h3>
-            <p className="text-gray-600">Vehicle management interface coming soon</p>
-          </div>
+          <VehicleManagement
+            vehicles={vehicles}
+            onAddVehicle={addVehicle}
+            onUpdateVehicle={updateVehicle}
+            onDeleteVehicle={deleteVehicle}
+          />
         )}
         
         {activeTab === 'supervisors' && (
-          <div className="text-center py-12">
-            <Users className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Supervisor Management</h3>
-            <p className="text-gray-600">Supervisor management interface coming soon</p>
-          </div>
+          <SupervisorManagement
+            supervisors={supervisors}
+            onAddSupervisor={addSupervisor}
+            onUpdateSupervisor={updateSupervisor}
+            onDeleteSupervisor={deleteSupervisor}
+          />
         )}
       </main>
     </div>
