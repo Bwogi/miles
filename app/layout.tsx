@@ -16,7 +16,33 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Security Vehicle Mileage Tracker",
-  description: "Security Vehicle Mileage Tracker",
+  description: "Professional vehicle mileage tracking and condition reporting for security operations",
+  manifest: "/manifest.json",
+  themeColor: "#2563eb",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Vehicle Tracker",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192x192.svg", sizes: "192x192", type: "image/svg+xml" },
+      { url: "/icons/icon-512x512.svg", sizes: "512x512", type: "image/svg+xml" }
+    ],
+    apple: [
+      { url: "/icons/icon-152x152.svg", sizes: "152x152", type: "image/svg+xml" }
+    ]
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-title": "Vehicle Tracker",
+    "application-name": "Vehicle Tracker",
+    "msapplication-TileColor": "#2563eb",
+    "msapplication-config": "/browserconfig.xml"
+  }
 };
 
 export default function RootLayout({

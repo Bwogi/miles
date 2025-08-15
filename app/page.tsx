@@ -1,24 +1,26 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { ShiftSelector } from "@/components/ShiftSelector"
 import { ActiveShiftDashboard } from "@/components/ActiveShiftDashboard"
-import { Dashboard } from "@/components/Dashboard"
-import { MileageForm } from "@/components/MileageForm"
 import { MileageHistory } from "@/components/MileageHistory"
-import { VehicleManagement } from "@/components/VehicleManagement"
-import { SupervisorManagement } from "@/components/SupervisorManagement"
-import { Reports } from "@/components/Reports"
-import { Button } from "@/components/ui/button"
+import { PWAInstaller, useServiceWorker } from "@/components/PWAInstaller"
 import { useData } from "@/hooks/useData"
-import { Vehicle, Supervisor, VehiclePhotos } from "@/types"
-import { BarChart3, Car, Users, Clock, Settings, FileText, Loader2, AlertTriangle } from "lucide-react"
+import { MileageEntry, Vehicle, Supervisor, VehiclePhotos } from "@/types"
+import { Car, Clock, BarChart3, History, Settings, Wifi, WifiOff, FileText, Users, Loader2, AlertTriangle } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function Home() {
   const [view, setView] = useState<'selector' | 'active' | 'admin'>('selector')
   const [activeTab, setActiveTab] = useState<'dashboard' | 'mileage' | 'history' | 'vehicles' | 'supervisors' | 'reports'>('dashboard')
   const [allowLogout, setAllowLogout] = useState(false)
   const [currentUserSession, setCurrentUserSession] = useState<string | null>(null)
+  
+  // PWA functionality
+  const { isOnline, swRegistration } = useServiceWorker()
   
   const {
     mileageEntries,
@@ -269,6 +271,20 @@ export default function Home() {
           onStartShift={handleStartShift}
           activeEntry={activeEntry}
         />
+        
+        {/* Offline Status Indicator */}
+        {!isOnline && (
+          <div className="fixed top-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm">
+            <div className="bg-orange-600/90 backdrop-blur-lg border border-orange-500 rounded-lg p-3 text-white text-sm flex items-center gap-2">
+              <WifiOff className="h-4 w-4" />
+              <span>You&apos;re offline. Data will sync when reconnected.</span>
+            </div>
+          </div>
+        )}
+        
+        {/* PWA Install Prompt */}
+        <PWAInstaller />
+        
         {(!activeEntry || !currentVehicle) && (
           <div className="fixed bottom-4 right-4 hidden md:block">
             <Button
@@ -368,72 +384,58 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {activeTab === 'dashboard' && (
-            <Dashboard entries={mileageEntries} vehicles={vehicles} />
-          )}
-          
-          {activeTab === 'mileage' && (
-            <MileageForm
-              vehicles={vehicles}
-              supervisors={supervisors}
-              onSubmit={async (data) => {
-                try {
-                  await addMileageEntry(data)
-                } catch (error) {
-                  console.error('Failed to add mileage entry:', error)
-                  alert('Failed to add mileage entry. Please try again.')
-                }
-              }}
-              activeEntry={activeEntry}
-              onEndShift={async (entryId: string, endMileage: number, notes?: string) => {
-                try {
-                  await endShift(entryId, endMileage, notes)
-                } catch (error) {
-                  console.error('Failed to end shift:', error)
-                  alert('Failed to end shift. Please try again.')
-                }
-              }}
-            />
-          )}
-          
-          {activeTab === 'history' && (
-            <MileageHistory
-              entries={mileageEntries}
-              vehicles={vehicles}
-              onDeleteEntry={handleDeleteEntry}
-            />
-          )}
-          
-          {activeTab === 'reports' && (
-            <Reports
-              entries={mileageEntries}
-              vehicles={vehicles}
-              supervisors={supervisors}
-            />
-          )}
-          
-          {activeTab === 'vehicles' && (
-            <VehicleManagement
-              vehicles={vehicles}
-              onAddVehicle={handleAddVehicle}
-              onUpdateVehicle={handleUpdateVehicle}
-              onDeleteVehicle={handleDeleteVehicle}
-            />
-          )}
-          
-          {activeTab === 'supervisors' && (
-            <SupervisorManagement
-              supervisors={supervisors}
-              onAddSupervisor={handleAddSupervisor}
-              onUpdateSupervisor={handleUpdateSupervisor}
-              onDeleteSupervisor={handleDeleteSupervisor}
-            />
-          )}
-        </main>
-      </div>
-    )
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'dashboard' && (
+          <div className="text-center py-12">
+            <BarChart3 className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Dashboard</h3>
+            <p className="text-gray-600">Analytics and overview coming soon</p>
+          </div>
+        )}
+        
+        {activeTab === 'mileage' && (
+          <div className="text-center py-12">
+            <Clock className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Mileage Entry</h3>
+            <p className="text-gray-600">Direct mileage entry form coming soon</p>
+          </div>
+        )}
+        
+        {activeTab === 'history' && (
+          <MileageHistory
+            entries={mileageEntries}
+            vehicles={vehicles}
+            onDeleteEntry={deleteMileageEntry}
+          />
+        )}
+        
+        {activeTab === 'reports' && (
+          <div className="text-center py-12">
+            <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Reports</h3>
+            <p className="text-gray-600">Advanced reporting features coming soon</p>
+          </div>
+        )}
+        
+        {activeTab === 'vehicles' && (
+          <div className="text-center py-12">
+            <Car className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Vehicle Management</h3>
+            <p className="text-gray-600">Vehicle management interface coming soon</p>
+          </div>
+        )}
+        
+        {activeTab === 'supervisors' && (
+          <div className="text-center py-12">
+            <Users className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Supervisor Management</h3>
+            <p className="text-gray-600">Supervisor management interface coming soon</p>
+          </div>
+        )}
+      </main>
+    </div>
+  )
   }
 
   // Fallback - should not reach here
