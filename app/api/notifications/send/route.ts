@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import webpush from 'web-push'
 
-// Configure web-push (you'll need to set these environment variables)
-webpush.setVapidDetails(
-  'mailto:admin@vehicletracker.com',
-  process.env.VAPID_PUBLIC_KEY || '',
-  process.env.VAPID_PRIVATE_KEY || ''
-)
+// Configure web-push only if VAPID keys are available
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY
+
+if (vapidPublicKey && vapidPrivateKey) {
+  webpush.setVapidDetails(
+    'mailto:admin@vehicletracker.com',
+    vapidPublicKey,
+    vapidPrivateKey
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {

@@ -11,15 +11,16 @@ import { VehicleManagement } from "@/components/VehicleManagement"
 import { SupervisorManagement } from "@/components/SupervisorManagement"
 import { Reports } from "@/components/Reports"
 import { Dashboard } from "@/components/Dashboard"
+import { NotificationManager } from "@/components/NotificationManager"
 import { PWAInstaller, useServiceWorker } from "@/components/PWAInstaller"
 import { useData } from "@/hooks/useData"
 import { MileageEntry, Vehicle, Supervisor, VehiclePhotos } from "@/types"
-import { Car, Clock, BarChart3, History, Settings, Wifi, WifiOff, FileText, Users, Loader2, AlertTriangle } from "lucide-react"
+import { Car, Clock, BarChart3, History, Settings, Wifi, WifiOff, FileText, Users, Loader2, AlertTriangle, Bell } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 export default function Home() {
   const [view, setView] = useState<'selector' | 'active' | 'admin'>('selector')
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'mileage' | 'history' | 'vehicles' | 'supervisors' | 'reports'>('dashboard')
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'mileage' | 'history' | 'vehicles' | 'supervisors' | 'reports' | 'notifications'>('dashboard')
   const [allowLogout, setAllowLogout] = useState(false)
   const [currentUserSession, setCurrentUserSession] = useState<string | null>(null)
   
@@ -220,7 +221,8 @@ export default function Home() {
     { id: 'history' as const, label: 'History', icon: Car },
     { id: 'reports' as const, label: 'Reports', icon: FileText },
     { id: 'vehicles' as const, label: 'Vehicles', icon: Car },
-    { id: 'supervisors' as const, label: 'Supervisors', icon: Users }
+    { id: 'supervisors' as const, label: 'Supervisors', icon: Users },
+    { id: 'notifications' as const, label: 'Notifications', icon: Bell }
   ]
 
   // Debug logging
@@ -436,6 +438,13 @@ export default function Home() {
             onAddSupervisor={addSupervisor}
             onUpdateSupervisor={updateSupervisor}
             onDeleteSupervisor={deleteSupervisor}
+          />
+        )}
+        
+        {activeTab === 'notifications' && (
+          <NotificationManager
+            vehicles={vehicles}
+            supervisors={supervisors}
           />
         )}
       </main>
