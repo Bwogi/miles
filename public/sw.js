@@ -195,37 +195,49 @@ async function removeOfflineData(id) {
   console.log('Removing offline data item:', id);
 }
 
-// Push notification handling (for future use)
-self.addEventListener('push', (event) => {
-  console.log('Service Worker: Push notification received');
+// Handle push events
+self.addEventListener('push', event => {
+  console.log('Push event received:', event)
   
-  const options = {
-    body: 'Vehicle shift reminder or update',
-    icon: '/icons/icon-192x192.svg',
-    badge: '/icons/icon-72x72.svg',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
-    actions: [
-      {
-        action: 'explore',
-        title: 'View Details',
-        icon: '/icons/icon-96x96.svg'
-      },
-      {
-        action: 'close',
-        title: 'Close',
-        icon: '/icons/icon-96x96.svg'
-      }
-    ]
-  };
-  
-  event.waitUntil(
-    self.registration.showNotification('Vehicle Tracker', options)
-  );
-});
+  if (event.data) {
+    const data = event.data.json()
+    const options = {
+      body: data.body,
+      icon: data.icon || '/icon-192x192.png',
+      badge: data.badge || '/icon-72x72.png',
+      vibrate: [100, 50, 100],
+      data: data.data || {},
+      tag: data.tag,
+      actions: data.actions || [
+        { action: 'view', title: 'View' },
+        { action: 'dismiss', title: 'Dismiss' }
+      ]
+    }
+    
+    event.waitUntil(
+      self.registration.showNotification(data.title || 'Vehicle Tracker', options)
+    )
+  }
+})
+
+// Handle messages from main thread
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
+    const { payload } = event.data
+    
+    const options = {
+      body: payload.body,
+      icon: payload.icon || '/icon-192x192.png',
+      badge: payload.badge || '/icon-72x72.png',
+      vibrate: [100, 50, 100],
+      data: payload.data || {},
+      tag: payload.tag,
+      actions: payload.actions || []
+    }
+    
+    self.registration.showNotification(payload.title, options)
+  }
+})
 
 // Handle notification clicks
 self.addEventListener('notificationclick', (event) => {

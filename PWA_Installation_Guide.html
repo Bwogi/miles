@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Vehicle Tracker - Installation Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            color: #333;
+            background: #fff;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2563eb;
+            font-size: 2.5em;
+            margin: 0;
+            font-weight: bold;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+            margin: 10px 0 0 0;
+        }
+        
+        .platform {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+        
+        .platform h2 {
+            color: #1e40af;
+            font-size: 1.8em;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+        }
+        
+        .android { background: #34d399; }
+        .ios { background: #60a5fa; }
+        
+        .steps {
+            counter-reset: step-counter;
+        }
+        
+        .step {
+            counter-increment: step-counter;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #2563eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .step::before {
+            content: "Step " counter(step-counter);
+            display: block;
+            font-weight: bold;
+            color: #2563eb;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #1f2937;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+        
+        .step-description {
+            color: #4b5563;
+            margin-bottom: 10px;
+        }
+        
+        .note {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .note strong {
+            color: #92400e;
+        }
+        
+        .requirements {
+            background: #ecfdf5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .requirements h3 {
+            color: #047857;
+            margin: 0 0 10px 0;
+        }
+        
+        .requirements ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .benefits {
+            background: #eff6ff;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .benefits h3 {
+            color: #1d4ed8;
+            margin: 0 0 15px 0;
+        }
+        
+        .benefits ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            color: #6b7280;
+        }
+        
+        @media print {
+            body { margin: 0; padding: 20px; }
+            .platform { page-break-inside: avoid; }
+            .step { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚗 Security Vehicle Tracker</h1>
+        <p>Progressive Web App Installation Guide</p>
+    </div>
+
+    <div class="requirements">
+        <h3>📋 Requirements</h3>
+        <ul>
+            <li><strong>Android:</strong> Chrome browser (version 76+) or Samsung Internet</li>
+            <li><strong>iOS:</strong> Safari browser (iOS 11.3+)</li>
+            <li><strong>Internet connection</strong> for initial installation</li>
+            <li><strong>Storage space:</strong> Approximately 5-10 MB</li>
+        </ul>
+    </div>
+
+    <div class="platform">
+        <h2>
+            <span class="platform-icon android">🤖</span>
+            Android Installation
+        </h2>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-title">Open Chrome Browser</div>
+                <div class="step-description">
+                    Launch the Chrome browser on your Android device and navigate to your app URL.
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Wait for Install Prompt</div>
+                <div class="step-description">
+                    After the page loads completely, an "Add to Home Screen" banner will appear at the bottom of the screen automatically.
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Tap "Install" or "Add"</div>
+                <div class="step-description">
+                    Tap the "Install" button in the prompt. If you don't see it, tap the three-dot menu (⋮) in Chrome and select "Add to Home Screen."
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Confirm Installation</div>
+                <div class="step-description">
+                    Confirm the installation when prompted. The app icon will be added to your home screen.
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Launch the App</div>
+                <div class="step-description">
+                    Tap the "Vehicle Tracker" icon on your home screen. The app will open in full-screen mode without browser controls.
+                </div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <strong>Note:</strong> If the install prompt doesn't appear, make sure you're using Chrome and the website is loaded over HTTPS.
+        </div>
+    </div>
+
+    <div class="platform">
+        <h2>
+            <span class="platform-icon ios">🍎</span>
+            iOS Installation
+        </h2>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-title">Open Safari Browser</div>
+                <div class="step-description">
+                    Launch Safari on your iPhone or iPad and navigate to your app URL. <strong>Important:</strong> You must use Safari - other browsers won't work for installation.
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Tap the Share Button</div>
+                <div class="step-description">
+                    Tap the Share button (square with arrow pointing up) at the bottom of the Safari screen.
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Select "Add to Home Screen"</div>
+                <div class="step-description">
+                    Scroll down in the share menu and tap "Add to Home Screen." You may need to scroll to find this option.
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Customize App Name</div>
+                <div class="step-description">
+                    Edit the app name if desired (default is "Vehicle Tracker") and tap "Add" in the top right corner.
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-title">Launch the App</div>
+                <div class="step-description">
+                    Find the "Vehicle Tracker" icon on your home screen and tap it. The app will open in full-screen mode like a native app.
+                </div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <strong>Note:</strong> The app icon will appear on your home screen and can be moved to folders or rearranged like any other app.
+        </div>
+    </div>
+
+    <div class="benefits">
+        <h3>✅ Benefits of Installing the PWA</h3>
+        <ul>
+            <li><strong>Offline Access:</strong> Use the app even without internet connection</li>
+            <li><strong>Fast Loading:</strong> Instant startup from your home screen</li>
+            <li><strong>Native Feel:</strong> Full-screen experience without browser controls</li>
+            <li><strong>Automatic Updates:</strong> App updates automatically when online</li>
+            <li><strong>Push Notifications:</strong> Receive important updates (if enabled)</li>
+            <li><strong>Secure:</strong> Data syncs securely when connection is restored</li>
+        </ul>
+    </div>
+
+    <div class="platform">
+        <h2>🔧 Troubleshooting</h2>
+        
+        <div class="step">
+            <div class="step-title">Install Prompt Not Appearing (Android)</div>
+            <div class="step-description">
+                • Make sure you're using Chrome browser<br>
+                • Clear browser cache and reload the page<br>
+                • Check that the website URL starts with "https://"
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-title">"Add to Home Screen" Missing (iOS)</div>
+            <div class="step-description">
+                • Ensure you're using Safari browser (not Chrome or Firefox)<br>
+                • Update iOS to version 11.3 or later<br>
+                • Try refreshing the page and checking the share menu again
+            </div>
+        </div>
+        
+        <div class="step">
+            <div class="step-title">App Not Working Offline</div>
+            <div class="step-description">
+                • Make sure you used the app while online first<br>
+                • Check that you installed it properly (not just bookmarked)<br>
+                • Try closing and reopening the app
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Security Vehicle Mileage Tracker</strong> | Progressive Web App</p>
+        <p>For technical support, contact your system administrator</p>
+    </div>
+</body>
+</html>
